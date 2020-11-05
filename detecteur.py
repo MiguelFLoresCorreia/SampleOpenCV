@@ -46,9 +46,11 @@ old_3=0
 test=0
 
 pygame.mixer.init()
-pygame.mixer.music.load("musique.mp3")   # chargement de la musique
-pygame.mixer.music.play()
-pygame.mixer.music.pause()
+   # chargement de la musique
+pygame.mixer.Channel(0).play(pygame.mixer.Sound("musique.mp3"))
+pygame.mixer.Channel(1).play(pygame.mixer.Sound("musique2.mp3"))
+pygame.mixer.Channel(0).pause()
+pygame.mixer.Channel(1).pause()
 
 while True:
     ret, frame=cap.read()
@@ -64,11 +66,21 @@ while True:
         if old_1==0:
             old_1=1
             print("play")
-            pygame.mixer.music.unpause()
+            pygame.mixer.Channel(0).unpause()
         elif old_1==1:
             old_1=0
             print("stop")
-            pygame.mixer.music.pause()
+            pygame.mixer.Channel(0).pause()
+            
+    if calcul_mean(mask[0:ymax-ymin, xmin2-xmin1:xmax2-xmin1])> seuil:
+        if old_2==0:
+            old_2=1
+            print("play")
+            pygame.mixer.Channel(1).unpause()
+        elif old_2==1:
+            old_2=0
+            print("stop")
+            pygame.mixer.Channel(1).pause()
         
 
         
@@ -81,15 +93,16 @@ while True:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
     originale=gray
     frame = cv2.flip(frame, 1)
-    frame_contour = cv2.flip(frame_contour, 1)
-    cv2.putText(frame_contour, "[o|l]seuil: {:d}  [p|m]blur: {:d}  [i|k]surface: {:d}".format(seuil, kernel_blur, surface), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
-    
+     
     mask = cv2.flip(mask, 1)
     
     cv2.rectangle(frame_contour, (xmin1, ymin), (xmax1, ymax), (0, 0, 255) if old_1 else (255, 0, 0), 3)
     cv2.rectangle(frame_contour, (xmin2, ymin), (xmax2, ymax), (0, 0, 255) if old_2 else (255, 0, 0), 3)
     cv2.rectangle(frame_contour, (xmin3, ymin), (xmax3, ymax), (0, 0, 255) if old_3 else (255, 0, 0), 3)
     
+    frame_contour = cv2.flip(frame_contour, 1)
+    cv2.putText(frame_contour, "[o|l]seuil: {:d}  [p|m]blur: {:d}  [i|k]surface: {:d}".format(seuil, kernel_blur, surface), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
+   
   #  cv2.imshow("frame", frame)
     cv2.imshow("contour", frame_contour)
 #    cv2.imshow("mask", mask)
