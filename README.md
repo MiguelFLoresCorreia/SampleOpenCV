@@ -8,7 +8,6 @@ PARTICIPANTS :
 
 Cussac Théo
 Camagny Robin
-Blanc Sébastien
 Flores Correia Miguel
 
 SUJET :
