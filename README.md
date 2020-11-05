@@ -24,3 +24,8 @@ OpenCV est très bien documenté et est open source.
 EXPLICATION RAPIDE DE LA METHODE DE FONCTIONNEMENT :
 
 Des carrées de detection seront préalablement placé à certains bords de la caméra, à chaque mouvement détecté dans cette case, un sample sera lancé en continue jusqu'à ce qu'un mouvement est redétecté dans cette même case. Il sera donc possible de lancer plusieurs samples en même temps.
+
+A FAIRE :
+
+- mettre en pose la detection du mouvement pendant un certain quand ce dernier est detecté
+- pouvoir mettre plusieurs musiques en même temps via pygame.mixer

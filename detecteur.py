@@ -69,6 +69,16 @@ while True:
             old_1=0
             print("stop")
             pygame.mixer.music.pause()
+            
+    if calcul_mean(mask[0:ymax-ymin, xmin2-xmin1:xmax2-xmin1])> seuil:
+        if old_2==0:
+            old_2=1
+            print("play")
+            pygame.mixer.music.unpause()
+        elif old_2==1:
+            old_2=0
+            print("stop")
+            pygame.mixer.music.pause()
         
 
         
