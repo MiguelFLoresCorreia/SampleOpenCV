@@ -7,6 +7,7 @@ Created on Thu Nov  5 09:01:03 2020
 
 import numpy as np
 import cv2
+import time
 import pygame.mixer
 
 cap=cv2.VideoCapture(0)
@@ -45,6 +46,8 @@ old_3=0
 
 test=0
 
+timeS = time.time()
+
 pygame.mixer.init()
 pygame.mixer.music.load("musique.mp3")   # chargement de la musique
 pygame.mixer.music.play()
@@ -60,15 +63,19 @@ while True:
     contours, nada=cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     frame_contour=frame.copy()
     
-    if calcul_mean(mask[0:ymax-ymin, 0:xmax1-xmin1])> seuil:
-        if old_1==0:
-            old_1=1
-            print("play")
-            pygame.mixer.music.unpause()
-        elif old_1==1:
-            old_1=0
-            print("stop")
-            pygame.mixer.music.pause()
+
+    if(time.time() - timeS) >= 1:
+        if calcul_mean(mask[0:ymax-ymin, 0:xmax1-xmin1])> seuil:
+            if old_1==0:
+                old_1=1
+                timeS = time.time()
+                print("play")
+                pygame.mixer.music.unpause()
+            elif old_1==1:
+                old_1=0
+                timeS = time.time()
+                print("stop")
+                pygame.mixer.music.pause()
         
 
         
