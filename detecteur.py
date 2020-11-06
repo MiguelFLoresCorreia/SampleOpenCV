@@ -50,12 +50,18 @@ timeS = time.time()
 
 pygame.mixer.init()
    # chargement de la musique
-pygame.mixer.Channel(1).play(pygame.mixer.Sound("musique.mp3"))
-pygame.mixer.Channel(2).play(pygame.mixer.Sound("musique2.mp3"))
-pygame.mixer.Channel(3).play(pygame.mixer.Sound("musique3.mp3"))
-pygame.mixer.Channel(1).pause()
-pygame.mixer.Channel(2).pause()
-pygame.mixer.Channel(3).pause()
+musique1=pygame.mixer.Sound("musique.mp3")
+musique2=pygame.mixer.Sound("musique2.mp3")
+musique3=pygame.mixer.Sound("musique3.mp3")
+pygame.mixer.Channel(1).play(musique1)
+pygame.mixer.Channel(2).play(musique2)
+pygame.mixer.Channel(3).play(musique3)
+musique1.set_volume(0)
+musique2.set_volume(0)
+musique3.set_volume(0)
+#pygame.mixer.Channel(1).pause()
+#pygame.mixer.Channel(2).pause()
+#pygame.mixer.Channel(3).pause()
 
 while True:
     ret, frame=cap.read()
@@ -73,36 +79,36 @@ while True:
                 old_1=1
                 timeS = time.time()
                 print("play 1")
-                pygame.mixer.Channel(1).unpause()
+                musique1.set_volume(1)
             elif old_1==1:
                 old_1=0
                 timeS = time.time()
                 print("stop 1")
-                pygame.mixer.Channel(1).pause()
+                musique1.set_volume(0)
             
         if calcul_mean(mask[0:ymax-ymin, xmin2-xmin1:xmax2-xmin1])> seuil:
             if old_2==0:
                 old_2=1
                 timeS = time.time()
                 print("play 2")
-                pygame.mixer.Channel(2).unpause()
+                musique2.set_volume(1)
             elif old_2==1:
                 old_2=0
                 timeS = time.time()
                 print("stop 2")
-                pygame.mixer.Channel(2).pause()
+                musique2.set_volume(0)
                 
         if calcul_mean(mask[0:ymax-ymin, xmin3-xmin1:xmax3-xmin1])> seuil:
             if old_3==0:
                 old_3=1
                 timeS = time.time()
                 print("play 3")
-                pygame.mixer.Channel(3).unpause()
+                musique3.set_volume(1)
             elif old_3==1:
                 old_3=0
                 timeS = time.time()
                 print("stop 3")
-                pygame.mixer.Channel(3).pause()
+                musique3.set_volume(0)
         
     for c in contours:
         cv2.drawContours(frame_contour, [c], 0, (0, 255, 0), 5)
@@ -128,9 +134,7 @@ while True:
     intrus=0
     key=cv2.waitKey(30)&0xFF
     if key==ord('q'):
-        pygame.mixer.Channel(1).stop()
-        pygame.mixer.Channel(2).stop()
-        pygame.mixer.Channel(3).stop()
+        pygame.mixer.quit()
         break
     if key==ord('p'):
         kernel_blur=min(43, kernel_blur+2)
