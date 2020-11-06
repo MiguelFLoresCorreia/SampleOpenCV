@@ -27,6 +27,6 @@ Des carrées de detection seront préalablement placé à certains bords de la c
 
 A FAIRE :
 
-- mettre en pose la detection du mouvement pendant un certain quand ce dernier est detecté
-- pouvoir mettre plusieurs musiques en même temps via pygame.mixer
-- detection feature
+- rechercher et installer les samples adéquate
+- detection with feature
+- choisir si on peut lancer ou non des samples em même temps

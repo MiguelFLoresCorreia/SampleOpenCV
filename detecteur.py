@@ -11,8 +11,6 @@ import time
 import pygame.mixer
 
 cap=cv2.VideoCapture(0)
-cap.set(3,1920)
-cap.set(4,1080)
 
 ymin=0
 ymax=100
@@ -27,7 +25,7 @@ xmin3=550
 xmax3=638
 
 kernel_blur=5
-seuil=50
+seuil=22
 surface=1000
 ret, originale=cap.read()
 originale=cv2.cvtColor(originale, cv2.COLOR_BGR2GRAY)
@@ -115,7 +113,7 @@ while True:
     
     cv2.putText(frame, "[o|l]seuil: {:d}  [p|m]blur: {:d}  [i|k]surface: {:d}".format(seuil, kernel_blur, surface), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
     
-    cv2.imshow("contour", frame)
+    cv2.imshow("frame", frame)
     
     key=cv2.waitKey(30)&0xFF
     if key==ord('q'):
