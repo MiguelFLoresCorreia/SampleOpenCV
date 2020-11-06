@@ -11,6 +11,8 @@ import time
 import pygame.mixer
 
 cap=cv2.VideoCapture(0)
+cap.set(3,1920)
+cap.set(4,1080)
 
 ymin=0
 ymax=100
@@ -44,12 +46,10 @@ old_1=0
 old_2=0
 old_3=0
 
-test=0
-
 timeS = time.time()
 
 pygame.mixer.init()
-   # chargement de la musique
+# chargement de la musique
 musique1=pygame.mixer.Sound("musique.mp3")
 musique2=pygame.mixer.Sound("musique2.mp3")
 musique3=pygame.mixer.Sound("musique3.mp3")
@@ -59,9 +59,6 @@ pygame.mixer.Channel(3).play(musique3)
 musique1.set_volume(0)
 musique2.set_volume(0)
 musique3.set_volume(0)
-#pygame.mixer.Channel(1).pause()
-#pygame.mixer.Channel(2).pause()
-#pygame.mixer.Channel(3).pause()
 
 while True:
     ret, frame=cap.read()
@@ -70,8 +67,6 @@ while True:
     mask=cv2.absdiff(originale, gray)
     mask=cv2.threshold(mask, seuil, 255, cv2.THRESH_BINARY)[1]
     mask=cv2.dilate(mask, kernel_dilate, iterations=3)
-    contours, nada=cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    frame_contour=frame.copy()
     
     if(time.time() - timeS) >= 1:
         if calcul_mean(mask[0:ymax-ymin, 0:xmax1-xmin1])> seuil:
@@ -109,29 +104,19 @@ while True:
                 timeS = time.time()
                 print("stop 3")
                 musique3.set_volume(0)
-        
-    for c in contours:
-        cv2.drawContours(frame_contour, [c], 0, (0, 255, 0), 5)
-        if cv2.contourArea(c)<surface:
-            continue
-        x, y, w, h=cv2.boundingRect(c)
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
+
     originale=gray
+    
+    cv2.rectangle(frame, (xmin1, ymin), (xmax1, ymax), (0, 0, 255) if old_1 else (255, 0, 0), 3)
+    cv2.rectangle(frame, (xmin2, ymin), (xmax2, ymax), (0, 0, 255) if old_2 else (255, 0, 0), 3)
+    cv2.rectangle(frame, (xmin3, ymin), (xmax3, ymax), (0, 0, 255) if old_3 else (255, 0, 0), 3)
+    
     frame = cv2.flip(frame, 1)
-     
-    mask = cv2.flip(mask, 1)
     
-    cv2.rectangle(frame_contour, (xmin1, ymin), (xmax1, ymax), (0, 0, 255) if old_1 else (255, 0, 0), 3)
-    cv2.rectangle(frame_contour, (xmin2, ymin), (xmax2, ymax), (0, 0, 255) if old_2 else (255, 0, 0), 3)
-    cv2.rectangle(frame_contour, (xmin3, ymin), (xmax3, ymax), (0, 0, 255) if old_3 else (255, 0, 0), 3)
+    cv2.putText(frame, "[o|l]seuil: {:d}  [p|m]blur: {:d}  [i|k]surface: {:d}".format(seuil, kernel_blur, surface), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
     
-    frame_contour = cv2.flip(frame_contour, 1)
-    cv2.putText(frame_contour, "[o|l]seuil: {:d}  [p|m]blur: {:d}  [i|k]surface: {:d}".format(seuil, kernel_blur, surface), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
-   
-  #  cv2.imshow("frame", frame)
-    cv2.imshow("contour", frame_contour)
-#    cv2.imshow("mask", mask)
-    intrus=0
+    cv2.imshow("contour", frame)
+    
     key=cv2.waitKey(30)&0xFF
     if key==ord('q'):
         pygame.mixer.quit()
