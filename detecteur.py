@@ -7,6 +7,7 @@ Created on Thu Nov  5 09:01:03 2020
 
 import numpy as np
 import cv2
+import time
 import pygame.mixer
 
 cap=cv2.VideoCapture(0)
@@ -45,12 +46,16 @@ old_3=0
 
 test=0
 
+timeS = time.time()
+
 pygame.mixer.init()
    # chargement de la musique
-pygame.mixer.Channel(0).play(pygame.mixer.Sound("musique.mp3"))
-pygame.mixer.Channel(1).play(pygame.mixer.Sound("musique2.mp3"))
-pygame.mixer.Channel(0).pause()
+pygame.mixer.Channel(1).play(pygame.mixer.Sound("musique.mp3"))
+pygame.mixer.Channel(2).play(pygame.mixer.Sound("musique2.mp3"))
+pygame.mixer.Channel(3).play(pygame.mixer.Sound("musique3.mp3"))
 pygame.mixer.Channel(1).pause()
+pygame.mixer.Channel(2).pause()
+pygame.mixer.Channel(3).pause()
 
 while True:
     ret, frame=cap.read()
@@ -62,28 +67,42 @@ while True:
     contours, nada=cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     frame_contour=frame.copy()
     
-    if calcul_mean(mask[0:ymax-ymin, 0:xmax1-xmin1])> seuil:
-        if old_1==0:
-            old_1=1
-            print("play")
-            pygame.mixer.Channel(0).unpause()
-        elif old_1==1:
-            old_1=0
-            print("stop")
-            pygame.mixer.Channel(0).pause()
+    if(time.time() - timeS) >= 1:
+        if calcul_mean(mask[0:ymax-ymin, 0:xmax1-xmin1])> seuil:
+            if old_1==0:
+                old_1=1
+                timeS = time.time()
+                print("play 1")
+                pygame.mixer.Channel(1).unpause()
+            elif old_1==1:
+                old_1=0
+                timeS = time.time()
+                print("stop 1")
+                pygame.mixer.Channel(1).pause()
             
-    if calcul_mean(mask[0:ymax-ymin, xmin2-xmin1:xmax2-xmin1])> seuil:
-        if old_2==0:
-            old_2=1
-            print("play")
-            pygame.mixer.Channel(1).unpause()
-        elif old_2==1:
-            old_2=0
-            print("stop")
-            pygame.mixer.Channel(1).pause()
-        
-
-        
+        if calcul_mean(mask[0:ymax-ymin, xmin2-xmin1:xmax2-xmin1])> seuil:
+            if old_2==0:
+                old_2=1
+                timeS = time.time()
+                print("play 2")
+                pygame.mixer.Channel(2).unpause()
+            elif old_2==1:
+                old_2=0
+                timeS = time.time()
+                print("stop 2")
+                pygame.mixer.Channel(2).pause()
+                
+        if calcul_mean(mask[0:ymax-ymin, xmin3-xmin1:xmax3-xmin1])> seuil:
+            if old_3==0:
+                old_3=1
+                timeS = time.time()
+                print("play 3")
+                pygame.mixer.Channel(3).unpause()
+            elif old_3==1:
+                old_3=0
+                timeS = time.time()
+                print("stop 3")
+                pygame.mixer.Channel(3).pause()
         
     for c in contours:
         cv2.drawContours(frame_contour, [c], 0, (0, 255, 0), 5)
@@ -109,7 +128,9 @@ while True:
     intrus=0
     key=cv2.waitKey(30)&0xFF
     if key==ord('q'):
-        pygame.mixer.music.stop()
+        pygame.mixer.Channel(1).stop()
+        pygame.mixer.Channel(2).stop()
+        pygame.mixer.Channel(3).stop()
         break
     if key==ord('p'):
         kernel_blur=min(43, kernel_blur+2)
