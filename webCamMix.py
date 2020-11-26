@@ -26,12 +26,17 @@ print(w, h)
 ymin=0
 ymax=int(h/4)
 
+nbMusiques = len(tabMusiques)
+
+if(nbMusiques>10):
+    nbMusiques=10
+print(nbMusiques)
 w=int(w/len(tabMusiques))
 
 old=[]
 xmin=[]
 xmax=[]
-for i in range(len(tabMusiques)):
+for i in range(nbMusiques):
     old.append(0)
     if len(xmin)==0:
         xmin.append(0)
@@ -68,10 +73,10 @@ timeS = time.time()+5
 dj=[]
 pygame.mixer.init()
 # chargement de la musique
-i=0
-for musique in tabMusiques:
-    print(musique)
-    musiqueAAjouter=pygame.mixer.Sound(dirname+"/"+musique)
+i=0 
+for musique in range(nbMusiques):
+    print(tabMusiques[musique])
+    musiqueAAjouter=pygame.mixer.Sound(dirname+"/"+tabMusiques[musique])
     pygame.mixer.Channel(i).play(musiqueAAjouter, loops=-1)
     musiqueAAjouter.set_volume(0)
     dj.append(musiqueAAjouter)
