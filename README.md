@@ -39,6 +39,7 @@ Des zones de detection seront préalablement placé au bord de la caméra, à ch
 
 - Clone du git (git clone https://github.com/MiguelFLoresCorreia/SampleOpenCV.git)
 
-- Allez dans le dossier cloner (cd SampleOpenCV)
-
 - Lancer le programme (py detecteur.py)
+
+
+video demo/ pouvoir mettre ses propres samples

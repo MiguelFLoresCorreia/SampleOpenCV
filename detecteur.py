@@ -9,6 +9,13 @@ import numpy as np
 import cv2
 import time
 import pygame.mixer
+import os
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
+
+Tk().withdraw() 
+dirname = askdirectory()
+tabMusiques = os.listdir(dirname)
 
 cap=cv2.VideoCapture(0)
 
@@ -19,22 +26,21 @@ print(w, h)
 ymin=0
 ymax=int(h/4)
 
-w=int(w/5)
+w=int(w/len(tabMusiques))
 
-xmin1=0
-xmax1=w
-
-xmin2=w
-xmax2=xmin2+w
-
-xmin3=xmax2
-xmax3=xmin3+w
-
-xmin4=xmax3
-xmax4=xmin4+w
-
-xmin5=xmax4
-xmax5=xmin5+w
+old=[]
+xmin=[]
+xmax=[]
+for i in range(len(tabMusiques)):
+    old.append(0)
+    if len(xmin)==0:
+        xmin.append(0)
+    else:    
+        xmin.append(xmax[i-1])
+    if len(xmax)==0:
+        xmax.append(w)
+    else:    
+        xmax.append(xmin[i]+w)
 
 kernel_blur=5
 seuil=20
@@ -57,31 +63,19 @@ def imshow_fullscreen (winname, img):
     cv2.setWindowProperty (winname, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     cv2.imshow (winname, img)
 
-old_1=0
-old_2=0
-old_3=0
-old_4=0
-old_5=0
-
 timeS = time.time()+5
 
+dj=[]
 pygame.mixer.init()
 # chargement de la musique
-musique1=pygame.mixer.Sound("musiques/bass90.wav")
-musique2=pygame.mixer.Sound("musiques/batterie90.wav")
-musique3=pygame.mixer.Sound("musiques/gated90.wav")
-musique4=pygame.mixer.Sound("musiques/percutguitare90.wav")
-musique5=pygame.mixer.Sound("musiques/beat90.wav")
-pygame.mixer.Channel(1).play(musique1, loops=-1)
-pygame.mixer.Channel(2).play(musique2, loops=-1)
-pygame.mixer.Channel(3).play(musique3, loops=-1)
-pygame.mixer.Channel(4).play(musique4, loops=-1)
-pygame.mixer.Channel(5).play(musique5, loops=-1)
-musique1.set_volume(0)
-musique2.set_volume(0)
-musique3.set_volume(0)
-musique4.set_volume(0)
-musique5.set_volume(0)
+i=0
+for musique in tabMusiques:
+    print(musique)
+    musiqueAAjouter=pygame.mixer.Sound(dirname+"/"+musique)
+    pygame.mixer.Channel(i).play(musiqueAAjouter, loops=-1)
+    musiqueAAjouter.set_volume(0)
+    dj.append(musiqueAAjouter)
+    i=i+1
 
 while True:
     ret, frame=cap.read()
@@ -91,75 +85,21 @@ while True:
     mask=cv2.threshold(mask, seuil, 255, cv2.THRESH_BINARY)[1]
     mask=cv2.dilate(mask, kernel_dilate, iterations=3)
     
-    if(time.time() - timeS) >= 1:
-        if calcul_mean(mask[0:ymax-ymin, 0:xmax1-xmin1])> seuil:
-            if old_1==0:
-                old_1=1
-                timeS = time.time()
-                print("play 1")
-                musique1.set_volume(1)
-            elif old_1==1:
-                old_1=0
-                timeS = time.time()
-                print("stop 1")
-                musique1.set_volume(0)
-            
-        if calcul_mean(mask[0:ymax-ymin, xmin2-xmin1:xmax2-xmin1])> seuil:
-            if old_2==0:
-                old_2=1
-                timeS = time.time()
-                print("play 2")
-                musique2.set_volume(1)
-            elif old_2==1:
-                old_2=0
-                timeS = time.time()
-                print("stop 2")
-                musique2.set_volume(0)
-                
-        if calcul_mean(mask[0:ymax-ymin, xmin3-xmin1:xmax3-xmin1])> seuil:
-            if old_3==0:
-                old_3=1
-                timeS = time.time()
-                print("play 3")
-                musique3.set_volume(1)
-            elif old_3==1:
-                old_3=0
-                timeS = time.time()
-                print("stop 3")
-                musique3.set_volume(0)
-                
-        if calcul_mean(mask[0:ymax-ymin, xmin4-xmin1:xmax4-xmin1])> seuil:
-            if old_4==0:
-                old_4=1
-                timeS = time.time()
-                print("play 4")
-                musique4.set_volume(1)
-            elif old_4==1:
-                old_4=0
-                timeS = time.time()
-                print("stop 4")
-                musique4.set_volume(0)
-                
-        if calcul_mean(mask[0:ymax-ymin, xmin5-xmin1:xmax5-xmin1])> seuil:
-            if old_5==0:
-                old_5=1
-                timeS = time.time()
-                print("play 5")
-                musique5.set_volume(1)
-            elif old_5==1:
-                old_5=0
-                timeS = time.time()
-                print("stop 5")
-                musique5.set_volume(0)
-
+    for i in range(len(old)):
+        if(time.time() - timeS) >= 1:
+            if calcul_mean(mask[0:ymax-ymin, xmin[i]-xmin[0]:xmax[i]-xmin[0]])> seuil:
+                if old[i]==0:
+                    old[i]=1
+                    timeS = time.time()
+                    dj[i].set_volume(1)
+                    print(old[i])
+                elif old[i]==1:
+                    old[i]=0
+                    timeS = time.time()
+                    dj[i].set_volume(0)
+        cv2.rectangle(frame, (xmin[i], ymin), (xmax[i], ymax), (0, 0, 255) if old[i] else (255, 0, 0), 3)
+    
     originale=gray
-    
-    cv2.rectangle(frame, (xmin1, ymin), (xmax1, ymax), (0, 0, 255) if old_1 else (255, 0, 0), 3)
-    cv2.rectangle(frame, (xmin2, ymin), (xmax2, ymax), (0, 0, 255) if old_2 else (255, 0, 0), 3)
-    cv2.rectangle(frame, (xmin3, ymin), (xmax3, ymax), (0, 0, 255) if old_3 else (255, 0, 0), 3)
-    cv2.rectangle(frame, (xmin4, ymin), (xmax4, ymax), (0, 0, 255) if old_4 else (255, 0, 0), 3)
-    cv2.rectangle(frame, (xmin5, ymin), (xmax5, ymax), (0, 0, 255) if old_5 else (255, 0, 0), 3)
-    
     frame = cv2.flip(frame, 1)
     cv2.putText(frame, "[o|l]seuil: {:d}  [p|m]blur: {:d}  [i|k]surface: {:d}".format(seuil, kernel_blur, surface), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
     imshow_fullscreen ('frame', frame)
