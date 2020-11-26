@@ -1,15 +1,15 @@
-#SampleOpenCV
+# SampleOpenCV
 
-##Projet réalisé par :
+## Projet réalisé par :
 - Cussac Théo
 - Camagny Robin
 - Flores Correia Miguel
 
-##SUJET :
+## SUJET :
 
 Lancer des samples par rapport aux mouvements des mains captés par la caméra.
 
-##CHOIX TECHNIQUES :
+## CHOIX TECHNIQUES :
 
 - Python
 	On utilise python avec lequel on utilisera les bibliothèques numpy, opencv (pour la capture caméra et sa manipulation) et pygame (pour manipuler la playlist de musique) 
@@ -20,13 +20,13 @@ Lancer des samples par rapport aux mouvements des mains captés par la caméra.
 - Pygame
 	Outil simple d'utilisation pour géré notre piste musicale
 
-##EXPLICATION RAPIDE DE LA METHODE DE FONCTIONNEMENT :
+## EXPLICATION RAPIDE DE LA METHODE DE FONCTIONNEMENT :
 
 Des zones de detection seront préalablement placé au bord de la caméra, à chaques mouvements détectés dans cette case, un sample de musique sera lancé en continue jusqu'à ce qu'un mouvement est redétecté dans cette même case. Il est possible de lancer plusieurs samples en même temps.
 
-##UTILISATION :
+## UTILISATION :
 
-###Prérequis :
+### Prérequis :
 
 - Caméra branchée à votre ordinateur
 - Python 3 installer 
@@ -35,10 +35,10 @@ Des zones de detection seront préalablement placé au bord de la caméra, à ch
 	- pygame (pip install pygame)
 	- opencv (pip install opencv-python)
 
-###Installation :
+### Installation et lancement :
 
-Clone du git (git clone https://github.com/MiguelFLoresCorreia/SampleOpenCV.git)
+- Clone du git (git clone https://github.com/MiguelFLoresCorreia/SampleOpenCV.git)
 
-Allez dans le dossier cloner (cd SampleOpenCV)
+- Allez dans le dossier cloner (cd SampleOpenCV)
 
-Lancer le programme (py detecteur.py)
+- Lancer le programme (py detecteur.py)
