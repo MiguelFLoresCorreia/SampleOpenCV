@@ -17,6 +17,8 @@ Tk().withdraw()
 dirname = askdirectory()
 tabMusiques = os.listdir(dirname)
 
+piano = False
+
 cap=cv2.VideoCapture(0)
 
 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
@@ -34,10 +36,12 @@ print(nbMusiques)
 w=int(w/len(tabMusiques))
 
 old=[]
+timeS=[]
 xmin=[]
 xmax=[]
 for i in range(nbMusiques):
     old.append(0)
+    timeS.append(time.time()+3)
     if len(xmin)==0:
         xmin.append(0)
     else:    
@@ -68,19 +72,15 @@ def imshow_fullscreen (winname, img):
     cv2.setWindowProperty (winname, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     cv2.imshow (winname, img)
 
-timeS = time.time()+5
-
 dj=[]
 pygame.mixer.init()
 # chargement de la musique
-i=0 
-for musique in range(nbMusiques):
-    print(tabMusiques[musique])
-    musiqueAAjouter=pygame.mixer.Sound(dirname+"/"+tabMusiques[musique])
+for i in range(nbMusiques):
+    print(tabMusiques[i])
+    musiqueAAjouter=pygame.mixer.Sound(dirname+"/"+tabMusiques[i])
     pygame.mixer.Channel(i).play(musiqueAAjouter, loops=-1)
     musiqueAAjouter.set_volume(0)
     dj.append(musiqueAAjouter)
-    i=i+1
 
 while True:
     ret, frame=cap.read()
@@ -90,23 +90,37 @@ while True:
     mask=cv2.threshold(mask, seuil, 255, cv2.THRESH_BINARY)[1]
     mask=cv2.dilate(mask, kernel_dilate, iterations=3)
     
-    for i in range(len(old)):
-        if(time.time() - timeS) >= 1:
+    if(piano):
+        print("piano")
+        for i in range(len(old)):
             if calcul_mean(mask[0:ymax-ymin, xmin[i]-xmin[0]:xmax[i]-xmin[0]])> seuil:
                 if old[i]==0:
                     old[i]=1
-                    timeS = time.time()
+                    timeS[i] = time.time()
+                    dj[i].stop()
+                    dj[i].play()
                     dj[i].set_volume(1)
-                    print(old[i])
-                elif old[i]==1:
-                    old[i]=0
-                    timeS = time.time()
-                    dj[i].set_volume(0)
-        cv2.rectangle(frame, (xmin[i], ymin), (xmax[i], ymax), (0, 0, 255) if old[i] else (255, 0, 0), 3)
+            if(time.time() - timeS[i]) >= 0.5:
+                old[i]=0
+                dj[i].set_volume(0)
+            cv2.rectangle(frame, (xmin[i], ymin), (xmax[i], ymax), (0, 0, 255) if old[i] else (255, 0, 0), 3)
+    else:
+        for i in range(len(old)):
+            if(time.time() - timeS[0]) >= 1:
+                if calcul_mean(mask[0:ymax-ymin, xmin[i]-xmin[0]:xmax[i]-xmin[0]])> seuil:
+                    if old[i]==0:
+                        old[i]=1
+                        timeS[0] = time.time()
+                        dj[i].set_volume(1)
+                    elif old[i]==1:
+                        old[i]=0
+                        timeS[0] = time.time()
+                        dj[i].set_volume(0)
+            cv2.rectangle(frame, (xmin[i], ymin), (xmax[i], ymax), (0, 0, 255) if old[i] else (255, 0, 0), 3)
     
     originale=gray
     frame = cv2.flip(frame, 1)
-    cv2.putText(frame, "[o|l]seuil: {:d}  [p|m]blur: {:d}  [i|k]surface: {:d}".format(seuil, kernel_blur, surface), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
+    cv2.putText(frame, "PIANO: {:d}".format(piano), (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 255, 255), 2)
     imshow_fullscreen ('frame', frame)
     
     key=cv2.waitKey(30)&0xFF
@@ -114,17 +128,8 @@ while True:
         pygame.mixer.quit()
         break
     if key==ord('p'):
-        kernel_blur=min(43, kernel_blur+2)
-    if key==ord('m'):
-        kernel_blur=max(1, kernel_blur-2)
-    if key==ord('i'):
-        surface+=1000
-    if key==ord('k'):
-        surface=max(1000, surface-1000)
-    if key==ord('o'):
-        seuil=min(255, seuil+1)
-    if key==ord('l'):
-        seuil=max(1, seuil-1)
+        piano=not piano
+        
 
 cap.release()
 cv2.destroyAllWindows()
