@@ -37,7 +37,7 @@ xmin5=xmax4
 xmax5=xmin5+w
 
 kernel_blur=5
-seuil=22
+seuil=20
 surface=1000
 ret, originale=cap.read()
 originale=cv2.cvtColor(originale, cv2.COLOR_BGR2GRAY)
@@ -67,11 +67,11 @@ timeS = time.time()+5
 
 pygame.mixer.init()
 # chargement de la musique
-musique1=pygame.mixer.Sound("musique/bass90.wav")
-musique2=pygame.mixer.Sound("musique/batterie90.wav")
-musique3=pygame.mixer.Sound("musique/gated90.wav")
-musique4=pygame.mixer.Sound("musique/percutguitare90.wav")
-musique5=pygame.mixer.Sound("musique/beat90.wav")
+musique1=pygame.mixer.Sound("musiques/bass90.wav")
+musique2=pygame.mixer.Sound("musiques/batterie90.wav")
+musique3=pygame.mixer.Sound("musiques/gated90.wav")
+musique4=pygame.mixer.Sound("musiques/percutguitare90.wav")
+musique5=pygame.mixer.Sound("musiques/beat90.wav")
 pygame.mixer.Channel(1).play(musique1, loops=-1)
 pygame.mixer.Channel(2).play(musique2, loops=-1)
 pygame.mixer.Channel(3).play(musique3, loops=-1)

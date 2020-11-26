@@ -1,32 +1,44 @@
-# SampleOpenCV
+#SampleOpenCV
 
-NOM :
+##Projet réalisé par :
+- Cussac Théo
+- Camagny Robin
+- Flores Correia Miguel
 
-SampleOpenCV
-
-PARTICIPANTS :
-
-Cussac Théo
-Camagny Robin
-Flores Correia Miguel
-
-SUJET :
+##SUJET :
 
 Lancer des samples par rapport aux mouvements des mains captés par la caméra.
 
+##CHOIX TECHNIQUES :
 
-CHOIX TECHNIQUES :
+- Python
+	On utilise python avec lequel on utilisera les bibliothèques numpy, opencv (pour la capture caméra et sa manipulation) et pygame (pour manipuler la playlist de musique) 
 
-Camera de l'ordinateur, librairie OpenCV, des fichiers audios.
+- OpenCV
+	Open source et bien documenté
 
-OpenCV est très bien documenté et est open source.
+- Pygame
+	Outil simple d'utilisation pour géré notre piste musicale
 
-EXPLICATION RAPIDE DE LA METHODE DE FONCTIONNEMENT :
+##EXPLICATION RAPIDE DE LA METHODE DE FONCTIONNEMENT :
 
-Des carrées de detection seront préalablement placé à certains bords de la caméra, à chaque mouvement détecté dans cette case, un sample sera lancé en continue jusqu'à ce qu'un mouvement est redétecté dans cette même case. Il sera donc possible de lancer plusieurs samples en même temps.
+Des zones de detection seront préalablement placé au bord de la caméra, à chaques mouvements détectés dans cette case, un sample de musique sera lancé en continue jusqu'à ce qu'un mouvement est redétecté dans cette même case. Il est possible de lancer plusieurs samples en même temps.
 
-A FAIRE :
+##UTILISATION :
 
-- rechercher et installer les samples adéquate
-- detection with feature
-- choisir si on peut lancer ou non des samples em même temps
+###Prérequis :
+
+- Caméra branchée à votre ordinateur
+- Python 3 installer 
+- Bibliothèques nécessaire à installer : 
+	- numpy (pip install numpy)
+	- pygame (pip install pygame)
+	- opencv (pip install opencv-python)
+
+###Installation :
+
+Clone du git (git clone https://github.com/MiguelFLoresCorreia/SampleOpenCV.git)
+
+Allez dans le dossier cloner (cd SampleOpenCV)
+
+Lancer le programme (py detecteur.py)
