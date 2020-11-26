@@ -1,4 +1,4 @@
-# SampleOpenCV
+# WebCam Mix - Mixez avec votre webcam
 
 ## Projet réalisé par :
 - Cussac Théo
