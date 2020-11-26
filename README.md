@@ -40,3 +40,12 @@ Des zones de detection seront préalablement placé au bord de la caméra, à ch
 - Clone du git (git clone https://github.com/MiguelFLoresCorreia/SampleOpenCV.git)
 
 - Lancer le programme (python webCamMix.py)
+
+- Tuto vidéo : https://www.youtube.com/watch?v=_TV5y_OzJZY&ab_channel=MiguelFloresCorrei
+
+### Explication du code :
+
+Dans un premier temps le code nous demande de choisir le dossiers contenant les notes ou les samples (les 10 premiers samples dans le document). Une fois cela fait le code va calculer selon le nombre de notes ou samples la taille des carrés. On associe alors chaque note/sample à un carré.
+La caméra va capturer une succession d'images dont la précédente va être comparée à la nouvelle. Si un mouvement est détecté au niveau d'un carré cela va actionner sa musique attribuée.
+Le son dura 0.5 secondes en mode piano ou jusqu'à son arrêt par l'utilisateur en mode infini.
+Pour changer le mode il faut appuyer sur la touche 'p' et pour quitter la touche 'q' qui va nous faire sortir de la boucle et arrêter le programme.
