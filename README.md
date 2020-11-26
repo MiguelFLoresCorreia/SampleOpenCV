@@ -41,7 +41,7 @@ Des zones de detection seront préalablement placé au bord de la caméra, à ch
 
 - Lancer le programme (python webCamMix.py)
 
-- Tuto vidéo : https://www.youtube.com/watch?v=_TV5y_OzJZY&ab_channel=MiguelFloresCorrei
+- Tuto vidéo : https://www.youtube.com/watch?v=GzVerW4UiyI&feature=youtu.be&ab_channel=MiguelFloresCorreia
 
 ### Explication du code :
 
